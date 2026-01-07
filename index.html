@@ -657,4 +657,78 @@
                 <div class="card">
                     <div class="card-title">Auto Check-in Status</div>
                     <div style="background: #d1fae5; border: 1px solid #a7f3d0; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
-                        <div style="display: flex; justify-content: space-between
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <strong>Status: Active ✓</strong>
+                            <span style="color: #047857; font-size: 14px;">Last: 15 mins ago</span>
+                        </div>
+                        <p style="color: #047857; font-size: 14px;">Next check-in in 45 minutes</p>
+                    </div>
+                    <p style="color: #6b7280; font-size: 14px;">Automatic safety check-ins keep you protected on the trail.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        function handleLogin() {
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            if (email && password) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appScreen').classList.add('active');
+            }
+        }
+        
+        function handleLogout() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('appScreen').classList.remove('active');
+            document.getElementById('emailInput').value = '';
+            document.getElementById('passwordInput').value = '';
+            showPage('dashboard');
+        }
+        
+        function showPage(pageName) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.style.display = 'none');
+            
+            // Show selected page
+            document.getElementById(pageName + 'Page').style.display = 'block';
+            
+            // Update nav buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-page') === pageName) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Show/hide back button
+            const backBtn = document.getElementById('backBtn');
+            if (pageName === 'dashboard') {
+                backBtn.style.display = 'none';
+            } else {
+                backBtn.style.display = 'block';
+            }
+        }
+        
+        function goToHome() {
+            showPage('dashboard');
+        }
+        
+        // Handle Enter key on login
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('#emailInput, #passwordInput');
+            inputs.forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        handleLogin();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
