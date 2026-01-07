@@ -1,0 +1,818 @@
+import React, { useState } from 'react';
+import { Menu, X, MapPin, Users, MessageSquare, Home, Shield, Radio, Map, Compass, Heart, Camera, Wifi, WifiOff, Navigation, Phone, AlertTriangle, Check, Star, Coffee, Tent, Mountain, ArrowLeft } from 'lucide-react';
+
+export default function TrailSync() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentPage, setCurrentPage] = useState('dashboard');
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+  const [meshEnabled, setMeshEnabled] = useState(false);
+  const [aiMessages, setAiMessages] = useState([
+    { type: 'ai', text: "Hey trekker! I'm your offline companion. I've downloaded data about Western Ghats. Ask me anything!" }
+  ]);
+  const [userMessage, setUserMessage] = useState('');
+
+  const handleLogin = () => {
+    if (loginForm.email && loginForm.password) {
+      setIsLoggedIn(true);
+      setCurrentPage('dashboard');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setCurrentPage('dashboard');
+    setLoginForm({ email: '', password: '' });
+  };
+
+  const sendAiMessage = () => {
+    if (!userMessage.trim()) return;
+    
+    const newMessages = [...aiMessages, { type: 'user', text: userMessage }];
+    setAiMessages(newMessages);
+    
+    setTimeout(() => {
+      let response = "I can help with that! Since we're offline, I'm using cached data about this region.";
+      
+      if (userMessage.toLowerCase().includes('tree') || userMessage.toLowerCase().includes('plant')) {
+        response = "That looks like a Teak tree! Common in Western Ghats. The leaves are large and rough. Local name is 'Sagwan'. Want to know more about the ecosystem here?";
+      } else if (userMessage.toLowerCase().includes('animal') || userMessage.toLowerCase().includes('bird')) {
+        response = "Based on your location, you might spot Malabar Giant Squirrels here! They're endemic to this region. Also watch for Nilgiri Wood Pigeons. Stay quiet and look up! 🐿️";
+      } else if (userMessage.toLowerCase().includes('route') || userMessage.toLowerCase().includes('path')) {
+        response = "The trail ahead splits in 500m. Left goes to the viewpoint (steep, 30 mins). Right is easier and leads to the waterfall (45 mins). Weather is clear today. Which one interests you?";
+      } else if (userMessage.toLowerCase().includes('weather') || userMessage.toLowerCase().includes('rain')) {
+        response = "Last synced weather data: Clear skies today, light rain expected tomorrow afternoon. I'd recommend finishing your trek before 2 PM tomorrow. Safe trekking! ⛅";
+      }
+      
+      setAiMessages([...newMessages, { type: 'ai', text: response }]);
+    }, 1000);
+    
+    setUserMessage('');
+  };
+
+  const trekPartners = [
+    { id: 1, name: 'Priya Sharma', age: 26, location: 'Bangalore', match: 92, interests: ['Photography', 'Nature', 'Camping'], intensity: 'Moderate', bio: 'Love exploring offbeat trails!', treks: 24, verified: true },
+    { id: 2, name: 'Arjun Patel', age: 29, location: 'Mumbai', match: 88, interests: ['Adventure', 'Wildlife', 'Culture'], intensity: 'High', bio: 'Trek leader, nature photographer', treks: 47, verified: true },
+    { id: 3, name: 'Sneha Reddy', age: 24, location: 'Pune', match: 85, interests: ['Solo Travel', 'Meditation', 'Yoga'], intensity: 'Low', bio: 'Seeking peace in mountains', treks: 15, verified: true },
+    { id: 4, name: 'Vikram Singh', age: 31, location: 'Delhi', match: 82, interests: ['Rock Climbing', 'Camping', 'Tech'], intensity: 'High', bio: 'Weekend warrior, gadget lover', treks: 38, verified: true }
+  ];
+
+  const homestays = [
+    { id: 1, name: "Lakshmi's Mountain Home", family: 'Lakshmi & Kumar Family', location: 'Kudremukh, Karnataka', price: '₹800/night', rating: 4.9, reviews: 127, amenities: ['Home Food', 'Guide Service', 'Bonfire'], image: '🏡', story: 'Local family farming for 3 generations. Kumar knows every trail!' },
+    { id: 2, name: "Gopal's Forest Retreat", family: 'Gopal Family', location: 'Agumbe, Karnataka', price: '₹600/night', rating: 4.8, reviews: 94, amenities: ['Organic Food', 'Nature Walks', 'Bird Watching'], image: '🏕️', story: 'Nestled in rainforest. Gopal shares stories of leopards and king cobras!' },
+    { id: 3, name: "Meera's Valley View", family: 'Meera & Ravi', location: 'Tansen, Nepal', price: '₹500/night', rating: 4.9, reviews: 156, amenities: ['Mountain View', 'Local Cuisine', 'Cultural Tours'], image: '⛰️', story: 'Traditional Nepali hospitality. Meera cooks the best dal bhat in town!' }
+  ];
+
+  const relayMessages = [
+    { id: 1, from: 'Rahul Kumar', to: 'Trek Group Alpha', status: 'pending', message: 'Reached base camp safely. Ankle twisted, returning. Continue without me!', distance: '2.3 km away', volunteers: 2 },
+    { id: 2, from: 'Emergency Contact', to: 'Amit Verma', status: 'delivered', message: 'Your mother called. All okay at home. Enjoy your trek!', deliveredBy: 'Priya S.', time: '15 mins ago' }
+  ];
+
+  const checkpoints = [
+    { id: 1, name: 'Base Camp', time: '06:00 AM', status: 'completed', elevation: '800m' },
+    { id: 2, name: 'First Rest Point', time: '08:30 AM', status: 'completed', elevation: '1200m' },
+    { id: 3, name: 'Waterfall Junction', time: '11:00 AM', status: 'current', elevation: '1600m' },
+    { id: 4, name: 'Summit', time: '02:00 PM', status: 'upcoming', elevation: '2400m' },
+    { id: 5, name: 'Return to Base', time: '06:00 PM', status: 'upcoming', elevation: '800m' }
+  ];
+
+  const communityTips = [
+    { id: 1, author: 'Deepak M.', trek: 'Kudremukh Peak', tip: 'Start before 5 AM to catch sunrise from top. Mist clears by 7. Best coffee at blue house near temple!', likes: 45, verified: true },
+    { id: 2, author: 'Ananya R.', trek: 'Agumbe Sunset', tip: 'Leeches are active after rain. Salt + good socks mandatory. Gopal uncle knows secret viewpoint!', likes: 38, verified: true },
+    { id: 3, author: 'Karthik S.', trek: 'Tansen Fort', tip: 'Local guide Ram dai is legend. Knows history + shortcuts. Book through Meera aunty only - trust me!', likes: 52, verified: true }
+  ];
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-900 via-teal-900 to-blue-900 flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-20 text-6xl">🏔️</div>
+          <div className="absolute top-40 right-32 text-5xl">🌲</div>
+          <div className="absolute bottom-32 left-40 text-5xl">⛺</div>
+          <div className="absolute bottom-20 right-20 text-6xl">🥾</div>
+        </div>
+        
+        <div className="relative z-10 w-full max-w-md">
+          <div className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20">
+            <div className="text-center mb-8">
+              <div className="inline-block p-4 bg-gradient-to-br from-green-400 to-teal-500 rounded-3xl mb-4 shadow-lg">
+                <Mountain className="w-16 h-16 text-white" />
+              </div>
+              <h1 className="text-5xl font-bold text-white mb-3">TrailSync</h1>
+              <p className="text-teal-200 text-lg">Your Offline Trek Companion</p>
+              <p className="text-teal-300 text-sm mt-2">Never Trek Alone Again</p>
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-teal-100 mb-2">Email</label>
+                <input
+                  type="email"
+                  value={loginForm.email}
+                  onChange={(e) => setLoginForm({...loginForm, email: e.target.value})}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-teal-200 focus:outline-none focus:ring-2 focus:ring-teal-400 transition-all"
+                  placeholder="trekker@example.com"
+                  onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-teal-100 mb-2">Password</label>
+                <input
+                  type="password"
+                  value={loginForm.password}
+                  onChange={(e) => setLoginForm({...loginForm, password: e.target.value})}
+                  className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-xl text-white placeholder-teal-200 focus:outline-none focus:ring-2 focus:ring-teal-400 transition-all"
+                  placeholder="••••••••"
+                  onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                />
+              </div>
+
+              <button
+                onClick={handleLogin}
+                className="w-full py-4 bg-gradient-to-r from-green-500 to-teal-600 text-white font-semibold rounded-xl hover:from-green-600 hover:to-teal-700 transition-all shadow-xl transform hover:scale-105"
+              >
+                Start Your Journey
+              </button>
+            </div>
+
+            <div className="mt-8 text-center space-y-2">
+              <p className="text-sm text-teal-200">✨ Demo Mode - Enter any credentials</p>
+              <div className="flex items-center justify-center gap-4 text-xs text-teal-300 pt-4 border-t border-white/20">
+                <span className="flex items-center gap-1"><WifiOff className="w-3 h-3" /> Offline Ready</span>
+                <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> AI Safety</span>
+                <span className="flex items-center gap-1"><Users className="w-3 h-3" /> Find Partners</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const navItems = [
+    { id: 'dashboard', icon: Home, label: 'Home' },
+    { id: 'ai-companion', icon: MessageSquare, label: 'AI Buddy' },
+    { id: 'partners', icon: Users, label: 'Partners' },
+    { id: 'homestays', icon: Coffee, label: 'Homestays' },
+    { id: 'trek-plan', icon: Map, label: 'My Trek' },
+    { id: 'safety', icon: Shield, label: 'Safety' },
+    { id: 'mesh', icon: Radio, label: 'Mesh' },
+    { id: 'community', icon: Star, label: 'Community' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Header */}
+      <header className="bg-white shadow-md sticky top-0 z-50 border-b-2 border-teal-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-3">
+              {currentPage !== 'dashboard' && (
+                <button
+                  onClick={() => setCurrentPage('dashboard')}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
+                  title="Back to Home"
+                >
+                  <ArrowLeft className="w-6 h-6 text-gray-600 group-hover:text-teal-600" />
+                </button>
+              )}
+              <div className="p-2 bg-gradient-to-br from-green-500 to-teal-600 rounded-xl shadow-lg">
+                <Mountain className="w-7 h-7 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent">
+                  TrailSync
+                </h1>
+                <p className="text-xs text-gray-500">Offline Ready ✓</p>
+              </div>
+            </div>
+
+            <div className="hidden md:flex items-center gap-2">
+              {navItems.slice(0, 5).map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => setCurrentPage(item.id)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
+                    currentPage === item.id 
+                      ? 'bg-teal-50 text-teal-700 shadow-sm' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span className="text-sm font-medium">{item.label}</span>
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-green-50 rounded-full border border-green-200">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs font-medium text-green-700">Online</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors text-sm font-medium"
+              >
+                Logout
+              </button>
+              <button
+                className="md:hidden p-2 hover:bg-gray-100 rounded-lg"
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
+                {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {menuOpen && (
+          <div className="md:hidden border-t border-gray-200 bg-white pb-4">
+            <div className="px-4 pt-4 grid grid-cols-2 gap-2">
+              {navItems.map(item => (
+                <button
+                  key={item.id}
+                  onClick={() => { setCurrentPage(item.id); setMenuOpen(false); }}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
+                    currentPage === item.id ? 'bg-teal-50 text-teal-700' : 'hover:bg-gray-50'
+                  }`}
+                >
+                  <item.icon className="w-4 h-4" />
+                  <span className="text-sm">{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {currentPage === 'dashboard' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900">Welcome Back, Trekker! 🏔️</h2>
+                <p className="text-gray-600 mt-1">Your next adventure awaits</p>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg">
+                <MapPin className="w-8 h-8 mb-3 opacity-80" />
+                <h3 className="text-3xl font-bold">12</h3>
+                <p className="text-sm opacity-90">Treks Completed</p>
+              </div>
+              <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-6 text-white shadow-lg">
+                <Users className="w-8 h-8 mb-3 opacity-80" />
+                <h3 className="text-3xl font-bold">8</h3>
+                <p className="text-sm opacity-90">Trek Partners</p>
+              </div>
+              <div className="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-6 text-white shadow-lg">
+                <Home className="w-8 h-8 mb-3 opacity-80" />
+                <h3 className="text-3xl font-bold">5</h3>
+                <p className="text-sm opacity-90">Homestays Visited</p>
+              </div>
+              <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl p-6 text-white shadow-lg">
+                <Mountain className="w-8 h-8 mb-3 opacity-80" />
+                <h3 className="text-3xl font-bold">3.2k</h3>
+                <p className="text-sm opacity-90">Meters Climbed</p>
+              </div>
+            </div>
+
+            {/* Current Trek */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-teal-100">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold text-gray-900">Current Trek</h3>
+                <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">In Progress</span>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="text-6xl">🏔️</div>
+                <div className="flex-1">
+                  <h4 className="text-2xl font-bold text-gray-900 mb-2">Kudremukh Peak Trek</h4>
+                  <p className="text-gray-600 mb-3">Karnataka, Western Ghats • 2 Days</p>
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> 14.5 km</span>
+                    <span className="flex items-center gap-1"><Mountain className="w-4 h-4" /> 2400m peak</span>
+                    <span className="flex items-center gap-1"><Users className="w-4 h-4" /> 3 partners</span>
+                  </div>
+                  <div className="mt-4">
+                    <div className="flex items-center justify-between text-sm mb-2">
+                      <span className="text-gray-600">Progress</span>
+                      <span className="font-semibold text-teal-600">60% Complete</span>
+                    </div>
+                    <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-green-500 to-teal-600 rounded-full" style={{width: '60%'}}></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button 
+                onClick={() => setCurrentPage('ai-companion')}
+                className="bg-gradient-to-br from-teal-50 to-teal-100 p-6 rounded-2xl border-2 border-teal-200 hover:border-teal-400 transition-all text-left shadow-md hover:shadow-lg"
+              >
+                <MessageSquare className="w-8 h-8 text-teal-600 mb-3" />
+                <h3 className="text-lg font-bold text-gray-900 mb-1">Ask AI Companion</h3>
+                <p className="text-sm text-gray-600">Chat about plants, routes & more</p>
+              </button>
+              
+              <button 
+                onClick={() => setCurrentPage('partners')}
+                className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border-2 border-blue-200 hover:border-blue-400 transition-all text-left shadow-md hover:shadow-lg"
+              >
+                <Users className="w-8 h-8 text-blue-600 mb-3" />
+                <h3 className="text-lg font-bold text-gray-900 mb-1">Find Partners</h3>
+                <p className="text-sm text-gray-600">4 compatible trekkers nearby</p>
+              </button>
+              
+              <button 
+                onClick={() => setCurrentPage('safety')}
+                className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-2xl border-2 border-red-200 hover:border-red-400 transition-all text-left shadow-md hover:shadow-lg"
+              >
+                <Shield className="w-8 h-8 text-red-600 mb-3" />
+                <h3 className="text-lg font-bold text-gray-900 mb-1">Safety Center</h3>
+                <p className="text-sm text-gray-600">Emergency SOS & Check-ins</p>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {currentPage === 'ai-companion' && (
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-teal-100">
+              <div className="bg-gradient-to-r from-teal-500 to-green-600 p-6 text-white">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-white/20 rounded-xl backdrop-blur">
+                    <MessageSquare className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold">AI Trek Companion</h2>
+                    <p className="text-teal-50 flex items-center gap-2 mt-1">
+                      <WifiOff className="w-4 h-4" />
+                      Offline Mode Active • Western Ghats Data Loaded
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 h-96 overflow-y-auto space-y-4 bg-gray-50">
+                {aiMessages.map((msg, idx) => (
+                  <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-md px-4 py-3 rounded-2xl ${
+                      msg.type === 'user' 
+                        ? 'bg-teal-600 text-white rounded-br-sm' 
+                        : 'bg-white text-gray-900 rounded-bl-sm border border-gray-200 shadow-sm'
+                    }`}>
+                      {msg.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="p-4 bg-white border-t-2 border-gray-100">
+                <div className="flex gap-3">
+                  <input
+                    type="text"
+                    value={userMessage}
+                    onChange={(e) => setUserMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && sendAiMessage()}
+                    placeholder="Ask about plants, routes, weather..."
+                    className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-teal-500 transition-colors"
+                  />
+                  <button
+                    onClick={sendAiMessage}
+                    className="px-6 py-3 bg-gradient-to-r from-teal-500 to-green-600 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-green-700 transition-all shadow-lg"
+                  >
+                    Send
+                  </button>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <button onClick={() => setUserMessage("What's that tree?")} className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-xs text-gray-700">What's that tree?</button>
+                  <button onClick={() => setUserMessage("Best route to summit?")} className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-xs text-gray-700">Best route?</button>
+                  <button onClick={() => setUserMessage("Weather today?")} className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-xs text-gray-700">Weather?</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {currentPage === 'partners' && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Find Trek Partners</h2>
+              <p className="text-gray-600">Verified profiles matched to your trekking style</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {trekPartners.map(partner => (
+                <div key={partner.id} className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100 hover:border-teal-300 transition-all">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-20 h-20 bg-gradient-to-br from-teal-400 to-blue-500 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg">
+                      {partner.name.charAt(0)}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-xl font-bold text-gray-900">{partner.name}</h3>
+                        {partner.verified && <Check className="w-5 h-5 text-green-500" />}
+                      </div>
+                      <p className="text-gray-600 text-sm">{partner.age} • {partner.location}</p>
+                      <div className="flex items-center gap-2 mt-2">
+                        <div className="px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-xs font-semibold">
+                          {partner.match}% Match
+                        </div>
+                        <div className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+                          {partner.treks} treks
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-700 mb-3 text-sm italic">"{partner.bio}"</p>
+                  
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {partner.interests.map((interest, idx) => (
+                      <span key={idx} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs">
+                        {interest}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <span className="text-sm text-gray-600">Intensity: <span className="font-semibold text-gray-900">{partner.intensity}</span></span>
+                    <button className="px-4 py-2 bg-gradient-to-r from-teal-500 to-green-600 text-white rounded-lg hover:from-teal-600 hover:to-green-700 transition-all text-sm font-semibold shadow-md">
+                      Connect
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {currentPage === 'homestays' && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Authentic Homestays</h2>
+              <p className="text-gray-600">Stay with local families • No hotels, just hearts 💚</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {homestays.map(stay => (
+                <div key={stay.id} className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-100 hover:border-teal-300 transition-all">
+                  <div className="bg-gradient-to-br from-green-400 to-teal-500 p-8 text-center text-7xl">
+                    {stay.image}
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{stay.name}</h3>
+                    <p className="text-teal-600 font-medium mb-1">{stay.family}</p>
+                    <p className="text-gray-600 text-sm mb-4 flex items-center gap-1">
+                      <MapPin className="w-4 h-4" />
+                      {stay.location}
+                    </p>
+                    
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4">
+                      <p className="text-sm text-gray-700 italic">"{stay.story}"</p>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {stay.amenities.map((amenity, idx) => (
+                        <span key={idx} className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-medium">
+                          ✓ {amenity}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div>
+                        <div className="flex items-center gap-1 mb-1">
+                          <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                          <span className="font-bold text-gray-900">{stay.rating}</span>
+                          <span className="text-gray-500 text-sm">({stay.reviews})</span>
+                        </div>
+                        <p className="text-xl font-bold text-teal-600">{stay.price}</p>
+                      </div>
+                      <button className="px-6 py-3 bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-xl hover:from-green-600 hover:to-teal-700 transition-all font-semibold shadow-lg">
+                        Book Stay
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {currentPage === 'trek-plan' && (
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Current Trek Plan</h2>
+              <p className="text-gray-600">Kudremukh Peak Trek • 14.5 km • Est. 8 hours</p>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-teal-100">
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <Compass className="w-6 h-6 text-teal-600" />
+                Checkpoints
+              </h3>
+              <div className="space-y-4">
+                {checkpoints.map((checkpoint, idx) => (
+                  <div key={checkpoint.id} className="flex items-center gap-4">
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold border-2 ${
+                      checkpoint.status === 'completed' ? 'bg-green-500 border-green-600 text-white' :
+                      checkpoint.status === 'current' ? 'bg-teal-500 border-teal-600 text-white animate-pulse' :
+                      'bg-gray-100 border-gray-300 text-gray-400'
+                    }`}>
+                      {checkpoint.status === 'completed' ? <Check className="w-6 h-6" /> : idx + 1}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-bold text-gray-900">{checkpoint.name}</h4>
+                      <div className="flex items-center gap-3 text-sm text-gray-600 mt-1">
+                        <span>{checkpoint.time}</span>
+                        <span>•</span>
+                        <span>{checkpoint.elevation}</span>
+                      </div>
+                    </div>
+                    {checkpoint.status === 'current' && (
+                      <span className="px-3 py-1 bg-teal-100 text-teal-700 rounded-full text-xs font-semibold">
+                        You are here
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <Map className="w-5 h-5 text-blue-600" />
+                Offline Map Downloaded
+              </h3>
+              <p className="text-gray-700 text-sm mb-3">Full trail map with 50m resolution • 23.4 MB</p>
+              <div className="bg-white rounded-xl p-4 text-center text-gray-400 border-2 border-dashed border-gray-300">
+                <MapPin className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                <p className="text-sm">Interactive map view • GPS tracking active</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {currentPage === 'safety' && (
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Safety Center</h2>
+              <p className="text-gray-600">Your guardian on the trail</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl shadow-xl p-8 text-white text-center">
+              <Shield className="w-16 h-16 mx-auto mb-4 opacity-90" />
+              <h3 className="text-2xl font-bold mb-2">Emergency SOS</h3>
+              <p className="text-red-100 mb-6">Press and hold for 3 seconds to activate</p>
+              <button className="w-full max-w-xs mx-auto py-4 bg-white text-red-600 font-bold rounded-xl hover:bg-red-50 transition-all text-lg shadow-lg">
+                ACTIVATE SOS
+              </button>
+              <p className="text-red-100 text-sm mt-4">Will alert nearby TrailSync users + emergency contacts</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Phone className="w-5 h-5 text-green-600" />
+                  Emergency Contacts
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-semibold text-gray-900">Mom</p>
+                      <p className="text-sm text-gray-600">+91 98765 43210</p>
+                    </div>
+                    <Phone className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div>
+                      <p className="font-semibold text-gray-900">Best Friend</p>
+                      <p className="text-sm text-gray-600">+91 98765 43211</p>
+                    </div>
+                    <Phone className="w-5 h-5 text-green-600" />
+                  </div>
+                  <button className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-gray-400 transition-all">
+                    + Add Contact
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100">
+                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-yellow-600" />
+                  Auto Check-in
+                </h3>
+                <div className="space-y-4">
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-semibold text-gray-900">Status: Active ✓</span>
+                      <span className="text-sm text-green-600">Last: 15 mins ago</span>
+                    </div>
+                    <p className="text-sm text-gray-600">Next check-in in 45 minutes</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-gray-700">Check-in Interval</label>
+                    <select className="w-full px-4 py-2 border-2 border-gray-200 rounded-lg focus:border-teal-500 focus:outline-none">
+                      <option>Every 30 minutes</option>
+                      <option selected>Every 1 hour</option>
+                      <option>Every 2 hours</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-6 border-2 border-amber-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-amber-600" />
+                Today's Hazard Forecast
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                  <div className="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Moderate Risk - Steep Sections</p>
+                    <p className="text-sm text-gray-600">Rocky terrain ahead. Watch your step between km 8-10.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-white rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Low Risk - Weather Clear</p>
+                    <p className="text-sm text-gray-600">Perfect visibility. No rain expected for 24 hours.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {currentPage === 'mesh' && (
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Mesh Network</h2>
+              <p className="text-gray-600">Connect offline, relay messages via nearby trekkers</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl shadow-xl p-8 text-white">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <Radio className="w-12 h-12" />
+                  <div>
+                    <h3 className="text-2xl font-bold">Mesh Network</h3>
+                    <p className="text-purple-100">Bluetooth Relay System</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setMeshEnabled(!meshEnabled)}
+                  className={`px-6 py-3 rounded-xl font-semibold transition-all ${
+                    meshEnabled 
+                      ? 'bg-white text-purple-600 shadow-lg' 
+                      : 'bg-white/20 text-white hover:bg-white/30'
+                  }`}
+                >
+                  {meshEnabled ? 'Enabled ✓' : 'Enable'}
+                </button>
+              </div>
+              
+              {meshEnabled && (
+                <div className="bg-white/10 backdrop-blur rounded-xl p-4">
+                  <div className="flex items-center justify-center gap-3 text-sm">
+                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    <span>Scanning for nearby TrailSync users...</span>
+                    <span className="font-bold">3 users in range</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Pending Relay Messages</h3>
+              <div className="space-y-4">
+                {relayMessages.map(msg => (
+                  <div key={msg.id} className={`p-4 rounded-xl border-2 ${
+                    msg.status === 'pending' ? 'bg-yellow-50 border-yellow-200' : 'bg-green-50 border-green-200'
+                  }`}>
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <p className="font-bold text-gray-900">{msg.from} → {msg.to}</p>
+                        {msg.status === 'pending' && (
+                          <p className="text-sm text-gray-600 mt-1">{msg.distance} • {msg.volunteers} volunteers available</p>
+                        )}
+                        {msg.status === 'delivered' && (
+                          <p className="text-sm text-green-600 mt-1">Delivered by {msg.deliveredBy} • {msg.time}</p>
+                        )}
+                      </div>
+                      {msg.status === 'pending' ? (
+                        <button className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-all text-sm font-semibold">
+                          Volunteer to Relay
+                        </button>
+                      ) : (
+                        <Check className="w-6 h-6 text-green-600" />
+                      )}
+                    </div>
+                    <p className="text-gray-700 bg-white p-3 rounded-lg text-sm italic">"{msg.message}"</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-3">How It Works</h3>
+              <div className="space-y-3 text-sm text-gray-700">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+                  <p><strong>Person A</strong> (at base with signal) creates a message for their group in the forest</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+                  <p><strong>Person B</strong> (passing by) volunteers to relay the message via Bluetooth</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+                  <p><strong>Person C, D, E</strong> (the group) automatically receive the message when Person B gets close</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {currentPage === 'community' && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Community Board</h2>
+              <p className="text-gray-600">Real tips from real trekkers 🌟</p>
+            </div>
+
+            <div className="space-y-4">
+              {communityTips.map(tip => (
+                <div key={tip.id} className="bg-white rounded-2xl shadow-lg p-6 border-2 border-gray-100 hover:border-teal-300 transition-all">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-teal-400 to-blue-500 rounded-2xl flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+                      {tip.author.charAt(0)}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-bold text-gray-900">{tip.author}</h3>
+                        {tip.verified && <Check className="w-4 h-4 text-green-500" />}
+                        <span className="text-gray-400">•</span>
+                        <span className="text-teal-600 font-semibold">{tip.trek}</span>
+                      </div>
+                      <p className="text-gray-700 mb-3">{tip.tip}</p>
+                      <div className="flex items-center gap-4">
+                        <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-teal-600 transition-colors">
+                          <Heart className="w-4 h-4" />
+                          <span className="font-semibold">{tip.likes}</span>
+                        </button>
+                        <button className="text-sm text-teal-600 hover:text-teal-700 font-semibold">
+                          Reply
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-gradient-to-br from-teal-50 to-green-50 rounded-2xl p-6 border-2 border-teal-200">
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Share Your Tip</h3>
+              <textarea
+                placeholder="Share your experience, hidden gems, or advice for fellow trekkers..."
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-teal-500 focus:outline-none min-h-24 resize-none"
+              ></textarea>
+              <button className="mt-3 px-6 py-3 bg-gradient-to-r from-teal-500 to-green-600 text-white font-semibold rounded-xl hover:from-teal-600 hover:to-green-700 transition-all shadow-lg">
+                Post Tip
+              </button>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Bottom Navigation - Mobile */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t-2 border-gray-200 shadow-lg z-50">
+        <div className="grid grid-cols-4 gap-1 p-2">
+          {navItems.slice(0, 4).map(item => (
+            <button
+              key={item.id}
+              onClick={() => setCurrentPage(item.id)}
+              className={`flex flex-col items-center gap-1 p-2 rounded-lg ${
+                currentPage === item.id ? 'bg-teal-50 text-teal-600' : 'text-gray-600'
+              }`}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="text-xs font-medium">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
+    </div>
+  );
+}
